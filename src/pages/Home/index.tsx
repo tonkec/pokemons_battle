@@ -11,7 +11,6 @@ const Home = () => {
           signOut(auth)
             .then(() => {
               logout();
-              console.log('Signed out successfully');
             })
             .catch((error) => {});
         }}

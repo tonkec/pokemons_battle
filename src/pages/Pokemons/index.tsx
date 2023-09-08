@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import PokemonService from '../../services/PokemonService';
 import { Pokemon } from '../../services/types';
 import PokemonCard from './PokemonCard';
+import usePokemonSelection from '../../hooks/usePokemonSelection';
 
 const Pokemons = () => {
+  const { onPokemonSelection, pokemonSelection } = usePokemonSelection();
+
   const [pokemons, setPokemons] = useState<Pokemon[]>();
   const [offset, setOffset] = useState<number>(0);
   const limit = 10;
@@ -16,6 +19,8 @@ const Pokemons = () => {
   useEffect(() => {
     getPokemons(limit, offset);
   }, [limit, offset]);
+
+  useEffect(() => {}, [pokemonSelection]);
   return (
     <>
       <h1>Select your pokemons</h1>
@@ -25,7 +30,17 @@ const Pokemons = () => {
           style={{ display: 'flex', flexWrap: 'wrap' }}
         >
           {pokemons.map((pokemon: Pokemon) => (
-            <PokemonCard pokemon={pokemon} />
+            <>
+              <PokemonCard pokemon={pokemon} />
+              <input
+                type="checkbox"
+                name=""
+                id=""
+                onChange={() => {
+                  onPokemonSelection(pokemon);
+                }}
+              />
+            </>
           ))}
         </div>
       )}
