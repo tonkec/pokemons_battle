@@ -1,17 +1,22 @@
-import { updateDoc, collection, addDoc, getDocs } from 'firebase/firestore';
+import {
+  deleteDoc,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+} from 'firebase/firestore';
 import { firestore } from '../firebase';
 
 const UserService = {
   async addPokemonToUser(pokemonId: string, userId: string, pokemons: any) {
     try {
       const ref = collection(firestore, 'users');
-      console.log(pokemons.length);
       if (pokemons.length > 6) {
         throw new Error('You can only have 6 pokemons');
       }
 
       const snapshot = await addDoc(ref, {
-        pokemonId,
+        url: pokemonId,
         userId,
       });
 
@@ -21,17 +26,24 @@ const UserService = {
     }
   },
 
-  async removePokemonFromUser(pokemonId: string, userId: string) {
+  async removePokemonFromUser(pokemonUrl: string, userId: string) {
     try {
       const ref = collection(firestore, 'users');
-      // @ts-ignore
-      const snapshot = await updateDoc(ref, {
-        pokemonId,
-        userId,
+      const snapshot = await getDocs(ref);
+      let docId = '';
+      snapshot.docs.map((doc) => {
+        if (doc.data().userId === userId) {
+          docId = doc.id;
+          return doc.data();
+        }
+
+        return [];
       });
-      return snapshot;
-    } catch (error) {
-      console.log(error);
+
+      const docRef = doc(firestore, 'users', docId);
+      await deleteDoc(docRef);
+    } catch (error: any) {
+      throw new Error(error);
     }
   },
 

@@ -1,7 +1,7 @@
 import { Pokemon, PokemonList } from './types';
 
 const PokemonService = {
-  async getPokemon(id: number): Promise<any> {
+  async getPokemonByUrl(id: string): Promise<any> {
     const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
     const data = await response.json();
     return data;

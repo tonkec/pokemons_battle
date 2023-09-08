@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import PokemonService from '../../services/PokemonService';
 import { Pokemon } from '../../services/types';
-import PokemonCard from './PokemonCard';
+import PokemonCard from './../../components/PokemonCard';
 import usePokemonSelection from '../../hooks/usePokemonSelection';
 import UserService from '../../services/UserService';
 import { useAuth } from '../../hooks/useAuth';
@@ -55,7 +55,7 @@ const Pokemons = () => {
           <AlertIcon />
           <AlertTitle>Too many pokemons</AlertTitle>
           <AlertDescription>
-            Please select less than 6 or remove some of your pokemons.
+            You have selected more than 6 pokemons
           </AlertDescription>
         </Alert>
       )}
@@ -67,7 +67,7 @@ const Pokemons = () => {
         >
           {allPokemons.map((pokemon: Pokemon) => (
             <>
-              <PokemonCard pokemon={pokemon} />
+              <PokemonCard hasDeleteButton={false} pokemon={pokemon} />
               <input
                 type="checkbox"
                 name=""
@@ -101,7 +101,7 @@ const Pokemons = () => {
         Next
       </button>
 
-      <button onClick={addPokemon}>Confirm</button>
+      <button onClick={addPokemon}>Add pokemon</button>
     </>
   );
 };
