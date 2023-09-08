@@ -4,6 +4,7 @@ import Register from './pages/Register';
 import Home from './pages/Home';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import Login from './pages/Login';
+import Pokemons from './pages/Pokemons';
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
               </ProtectedRoute>
             }
           />
+
+          <Route path="/pokemons" element={<Pokemons />} />
+
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
         </Routes>
