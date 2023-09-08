@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLocalStorage } from './../hooks/useLocalStorage';
 export const AuthContext = createContext({
   user: null,
-  login: (data: any) => {},
+  login: (data: any, url: string) => {},
   logout: () => {},
 });
 
@@ -12,9 +12,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
 
   const login = useCallback(
-    (data: string) => {
+    (data: string, url: string) => {
       setUser(data);
-      navigate('/');
+      navigate(url);
     },
     [navigate, setUser]
   );

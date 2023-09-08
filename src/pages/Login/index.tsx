@@ -12,7 +12,7 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user: any = userCredential.user;
-        login(user.uid);
+        login(user.uid, '/');
       })
       .catch((error) => {
         const errorCode = error.code;

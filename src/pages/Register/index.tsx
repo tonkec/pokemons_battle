@@ -2,22 +2,23 @@ import { useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import auth from '../../firebase';
 import { useAuth } from '../../hooks/useAuth';
-import { useNavigate } from 'react-router';
 
 const Register = () => {
-  const navigate = useNavigate();
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const onFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createUserWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigate('/pokemons');
+      .then((userCredential) => {
+        const user = userCredential.user;
+        login(user.uid, '/pokemons');
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode, errorMessage);
+        // ..
       });
   };
   return (

@@ -3,8 +3,13 @@ import PokemonService from '../../services/PokemonService';
 import { Pokemon } from '../../services/types';
 import PokemonCard from './PokemonCard';
 import usePokemonSelection from '../../hooks/usePokemonSelection';
+import UserService from '../../services/UserService';
+import { useAuth } from '../../hooks/useAuth';
+import { useNavigate } from 'react-router';
 
 const Pokemons = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const { onPokemonSelection, pokemonSelection } = usePokemonSelection();
 
   const [pokemons, setPokemons] = useState<Pokemon[]>();
@@ -20,7 +25,6 @@ const Pokemons = () => {
     getPokemons(limit, offset);
   }, [limit, offset]);
 
-  useEffect(() => {}, [pokemonSelection]);
   return (
     <>
       <h1>Select your pokemons</h1>
@@ -63,6 +67,25 @@ const Pokemons = () => {
         }}
       >
         Next
+      </button>
+
+      <button
+        onClick={async () => {
+          if (pokemonSelection && user) {
+            if (pokemonSelection.length > 0) {
+              pokemonSelection.forEach(async (pokemon) => {
+                try {
+                  await UserService.addPokemonToUser(pokemon.url, user);
+                  navigate('/dashboard');
+                } catch (error) {
+                  console.log(error);
+                }
+              });
+            }
+          }
+        }}
+      >
+        Confirm
       </button>
     </>
   );
