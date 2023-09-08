@@ -3,15 +3,18 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { PokemonSelectionProvider } from './context/PokemonSelectionProvider';
+import { ChakraProvider } from '@chakra-ui/react';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <PokemonSelectionProvider>
-      <App />
-    </PokemonSelectionProvider>
+    <ChakraProvider>
+      <PokemonSelectionProvider>
+        <App />
+      </PokemonSelectionProvider>
+    </ChakraProvider>
   </React.StrictMode>
 );
 

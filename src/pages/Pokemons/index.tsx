@@ -6,19 +6,42 @@ import usePokemonSelection from '../../hooks/usePokemonSelection';
 import UserService from '../../services/UserService';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router';
+import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+} from '@chakra-ui/react';
 
 const Pokemons = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { onPokemonSelection, pokemonSelection } = usePokemonSelection();
-
-  const [pokemons, setPokemons] = useState<Pokemon[]>();
+  const [allPokemons, setAllPokemons] = useState<Pokemon[]>();
+  const [error, setError] = useState<string>();
   const [offset, setOffset] = useState<number>(0);
   const limit = 10;
 
   const getPokemons = async (limit: number, offset: number) => {
     const pokemons = await PokemonService.getAllPokemonPages(limit, offset);
-    setPokemons(pokemons);
+    setAllPokemons(pokemons);
+  };
+
+  const addPokemon = async () => {
+    if (pokemonSelection && user) {
+      const userPokemons = await UserService.getAllUserPokemons(user);
+
+      if (pokemonSelection.length > 0) {
+        pokemonSelection.forEach(async (pokemon) => {
+          try {
+            await UserService.addPokemonToUser(pokemon.url, user, userPokemons);
+            navigate('/');
+          } catch (error: any) {
+            setError(error.message);
+          }
+        });
+      }
+    }
   };
 
   useEffect(() => {
@@ -27,13 +50,22 @@ const Pokemons = () => {
 
   return (
     <>
+      {error && (
+        <Alert status="error">
+          <AlertIcon />
+          <AlertTitle>Too many pokemons</AlertTitle>
+          <AlertDescription>
+            Please select less than 6 or remove some of your pokemons.
+          </AlertDescription>
+        </Alert>
+      )}
       <h1>Select your pokemons</h1>
-      {pokemons && pokemons.length > 0 && (
+      {allPokemons && allPokemons.length > 0 && (
         <div
           className="pokemon-list"
           style={{ display: 'flex', flexWrap: 'wrap' }}
         >
-          {pokemons.map((pokemon: Pokemon) => (
+          {allPokemons.map((pokemon: Pokemon) => (
             <>
               <PokemonCard pokemon={pokemon} />
               <input
@@ -69,24 +101,7 @@ const Pokemons = () => {
         Next
       </button>
 
-      <button
-        onClick={async () => {
-          if (pokemonSelection && user) {
-            if (pokemonSelection.length > 0) {
-              pokemonSelection.forEach(async (pokemon) => {
-                try {
-                  await UserService.addPokemonToUser(pokemon.url, user);
-                  navigate('/dashboard');
-                } catch (error) {
-                  console.log(error);
-                }
-              });
-            }
-          }
-        }}
-      >
-        Confirm
-      </button>
+      <button onClick={addPokemon}>Confirm</button>
     </>
   );
 };

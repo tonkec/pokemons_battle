@@ -1,10 +1,10 @@
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './context/AuthProvider';
 import Register from './pages/Register';
-import Home from './pages/Home';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 import Login from './pages/Login';
 import Pokemons from './pages/Pokemons';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   return (
@@ -15,12 +15,19 @@ function App() {
             path="/"
             element={
               <ProtectedRoute>
-                <Home />
+                <Dashboard />
               </ProtectedRoute>
             }
           />
 
-          <Route path="/pokemons" element={<Pokemons />} />
+          <Route
+            path="/pokemons"
+            element={
+              <ProtectedRoute>
+                <Pokemons />
+              </ProtectedRoute>
+            }
+          />
 
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
