@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import PokemonService from '../../services/PokemonService';
 import { Pokemon } from '../../services/types';
 import { getIdFromUrl } from '../../helpers';
-import UserService from '../../services/UserService';
 import { useAuth } from '../../hooks/useAuth';
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
 

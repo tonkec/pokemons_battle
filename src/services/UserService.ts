@@ -83,6 +83,8 @@ const UserService = {
       const data = snapshot.docs.map((doc) => {
         return doc.data();
       });
+
+      console.log(data);
       return data;
     } catch (error) {
       console.log(error);
@@ -92,12 +94,62 @@ const UserService = {
   async createUser(name: string, rank: number, userId: string) {
     try {
       const ref = collection(firestore, 'users');
-      const snapshot = await addDoc(ref, {
-        name,
-        rank,
-        userId,
+      const querySnapshot = await getDocs(ref);
+      let userExists = false;
+      querySnapshot.forEach((doc) => {
+        if (doc.data().name === name) {
+          userExists = true;
+        }
+
+        if (doc.data().userId === userId) {
+          userExists = true;
+        }
       });
-      return snapshot;
+
+      if (userExists) {
+        throw new Error('User already exists');
+      } else {
+        const snapshot = await addDoc(ref, {
+          name,
+          rank,
+          userId,
+        });
+        return snapshot;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  async getUserById(userId: string) {
+    try {
+      const ref = collection(firestore, 'users');
+      const querySnapshot = await getDocs(ref);
+      let user: any = {};
+      querySnapshot.forEach((doc) => {
+        if (doc.data().userId === userId) {
+          user = doc.data();
+        }
+      });
+
+      return user;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  async getUserByName(name: string) {
+    try {
+      const ref = collection(firestore, 'users');
+      const querySnapshot = await getDocs(ref);
+      let user: any = {};
+      querySnapshot.forEach((doc) => {
+        if (doc.data().name === name) {
+          user = doc.data();
+        }
+      });
+
+      return user;
     } catch (error) {
       console.log(error);
     }

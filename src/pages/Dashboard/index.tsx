@@ -1,7 +1,58 @@
+import { useEffect, useState } from 'react';
+import UserService from '../../services/UserService';
+import TrainerCard from '../../components/TrainerCard';
+import { useNavigate } from 'react-router';
+
 const Dashboard = () => {
+  const [users, setUsers] = useState<any>([]);
+  const navigate = useNavigate();
+
+  const fetchUsers = async () => {
+    UserService.getAllUsers()
+      .then((users) => {
+        setUsers(users);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
   return (
     <>
-      <h1>Dashboard</h1>
+      <h1>List of all trainers</h1>
+      <input
+        type="search"
+        placeholder="Search for a trainer"
+        onChange={(e) => {
+          const filteredTrainers = users.filter((trainer: any) => {
+            return trainer.name
+              .toLowerCase()
+              .includes(e.target.value.toLowerCase());
+          });
+
+          if (e.target.value === '') {
+            fetchUsers();
+          }
+          setUsers(filteredTrainers);
+        }}
+      />
+      {users && users.length > 0 && (
+        <div>
+          {users.map((user: any) => (
+            <div key={user.userId}>
+              <TrainerCard
+                trainer={user}
+                onClick={() => {
+                  navigate(`/trainer/${user.userId}`);
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 };

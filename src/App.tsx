@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import AddPokemon from './pages/AddPokemon';
 import UserPokemons from './pages/UserPokemons';
 import Dashboard from './pages/Dashboard';
+import TrainerPage from './pages/TrainerPage';
 
 function App() {
   return (
@@ -35,6 +36,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <UserPokemons />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/trainer/:id"
+            element={
+              <ProtectedRoute>
+                <TrainerPage />
               </ProtectedRoute>
             }
           />

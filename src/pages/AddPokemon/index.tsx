@@ -31,6 +31,7 @@ const Pokemons = () => {
     if (pokemonSelection && user) {
       if (pokemonSelection.length > 0) {
         UserService.addPokemonToUser(user, pokemonSelection);
+        navigate('/');
       }
     }
   };
