@@ -8,14 +8,15 @@ import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
 
 const PokemonCard = ({
   pokemon,
-  hasDeleteButton,
+  onDelete,
+  errorMessage,
 }: {
   pokemon: Pokemon;
-  hasDeleteButton: boolean;
+  onDelete?: () => void;
+  errorMessage?: string;
 }) => {
   const { user } = useAuth();
   const [pokemonImage, setPokemonImage] = useState<string>('');
-  const [errorMessage, setErrorMessage] = useState<string[]>([]);
 
   useEffect(() => {
     const getPokemonData = async () => {
@@ -41,19 +42,9 @@ const PokemonCard = ({
           <img src={pokemonImage} alt={pokemon.name} />
         </div>
         <div className="pokemon-card__name">{pokemon.name}</div>
-        {hasDeleteButton && user && (
+        {onDelete && user && (
           <div className="pokemon-card__remove">
-            <button
-              onClick={async () => {
-                try {
-                  await UserService.removePokemonFromUser(pokemon.url, user);
-                } catch (error: any) {
-                  setErrorMessage(error.message);
-                }
-              }}
-            >
-              Remove
-            </button>
+            <button onClick={onDelete}>Remove</button>
           </div>
         )}
       </div>

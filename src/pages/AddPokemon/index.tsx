@@ -67,7 +67,7 @@ const Pokemons = () => {
         >
           {allPokemons.map((pokemon: Pokemon) => (
             <>
-              <PokemonCard hasDeleteButton={false} pokemon={pokemon} />
+              <PokemonCard pokemon={pokemon} />
               <input
                 type="checkbox"
                 name=""

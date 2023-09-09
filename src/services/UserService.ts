@@ -10,7 +10,7 @@ import { firestore } from '../firebase';
 const UserService = {
   async addPokemonToUser(pokemonId: string, userId: string, pokemons: any) {
     try {
-      const ref = collection(firestore, 'users');
+      const ref = collection(firestore, 'users', userId, 'pokemons');
       if (pokemons.length > 6) {
         throw new Error('You can only have 6 pokemons');
       }
@@ -28,20 +28,17 @@ const UserService = {
 
   async removePokemonFromUser(pokemonUrl: string, userId: string) {
     try {
-      const ref = collection(firestore, 'users');
-      const snapshot = await getDocs(ref);
-      let docId = '';
-      snapshot.docs.map((doc) => {
-        if (doc.data().userId === userId) {
-          docId = doc.id;
-          return doc.data();
-        }
+      const ref = collection(firestore, 'users', userId, 'pokemons');
+      // delete all pokemons from user
 
-        return [];
+      const snapshot = await getDocs(ref);
+      const data = snapshot.docs.map((doc) => {
+        if (doc.data().url === pokemonUrl) {
+          deleteDoc(doc.ref);
+        }
       });
 
-      const docRef = doc(firestore, 'users', docId);
-      await deleteDoc(docRef);
+      return data;
     } catch (error: any) {
       throw new Error(error);
     }
@@ -49,7 +46,7 @@ const UserService = {
 
   async getAllUserPokemons(userId: string) {
     try {
-      const ref = collection(firestore, 'users');
+      const ref = collection(firestore, 'users', userId, 'pokemons');
       const snapshot = await getDocs(ref);
       const data = snapshot.docs.map((doc) => {
         if (doc.data().userId === userId) {
@@ -57,6 +54,19 @@ const UserService = {
         }
 
         return [];
+      });
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  async getAllUsers() {
+    try {
+      const ref = collection(firestore, 'users');
+      const snapshot = await getDocs(ref);
+      const data = snapshot.docs.map((doc) => {
+        return doc.data();
       });
       return data;
     } catch (error) {

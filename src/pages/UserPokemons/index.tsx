@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import UserService from '../../services/UserService';
 import { Pokemon } from '../../services/types';
@@ -7,23 +7,36 @@ import PokemonCard from '../../components/PokemonCard';
 
 const UserPokemons = () => {
   const [userPokemons, setUserPokemons] = useState<DocumentData | never[][]>();
+  const [errorMessage, setErrorMessage] = useState<string>('');
+
   const { user } = useAuth();
 
-  useEffect(() => {
-    user &&
-      UserService.getAllUserPokemons(user)
-        .then((pokemons) => {
-          setUserPokemons(pokemons);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+  const fetchAllPokemons = useCallback(async () => {
+    if (user) {
+      const pokemons = await UserService.getAllUserPokemons(user);
+      setUserPokemons(pokemons);
+    }
   }, [user]);
 
-  return userPokemons && userPokemons.length > 0 ? (
+  useEffect(() => {
+    fetchAllPokemons();
+  }, [fetchAllPokemons]);
+
+  return user && userPokemons && userPokemons.length > 0 ? (
     <div>
       {userPokemons.map((pokemon: Pokemon) => (
-        <PokemonCard hasDeleteButton pokemon={pokemon} />
+        <PokemonCard
+          onDelete={async () => {
+            try {
+              await UserService.removePokemonFromUser(pokemon.url, user);
+              fetchAllPokemons();
+            } catch (error: any) {
+              setErrorMessage(error.message);
+            }
+          }}
+          pokemon={pokemon}
+          errorMessage={errorMessage}
+        />
       ))}
     </div>
   ) : (
