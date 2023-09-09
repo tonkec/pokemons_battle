@@ -29,17 +29,8 @@ const Pokemons = () => {
 
   const addPokemon = async () => {
     if (pokemonSelection && user) {
-      const userPokemons = await UserService.getAllUserPokemons(user);
-
       if (pokemonSelection.length > 0) {
-        pokemonSelection.forEach(async (pokemon) => {
-          try {
-            await UserService.addPokemonToUser(pokemon.url, user, userPokemons);
-            navigate('/');
-          } catch (error: any) {
-            setError(error.message);
-          }
-        });
+        UserService.addPokemonToUser(user, pokemonSelection);
       }
     }
   };
@@ -53,10 +44,8 @@ const Pokemons = () => {
       {error && (
         <Alert status="error">
           <AlertIcon />
-          <AlertTitle>Too many pokemons</AlertTitle>
-          <AlertDescription>
-            You have selected more than 6 pokemons
-          </AlertDescription>
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
       <h1>Select your pokemons</h1>
