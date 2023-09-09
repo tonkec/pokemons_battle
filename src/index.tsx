@@ -4,6 +4,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { PokemonSelectionProvider } from './context/PokemonSelectionProvider';
 import { ChakraProvider } from '@chakra-ui/react';
+import { TournamentProvider } from './context/TournamentProvider';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -11,9 +12,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ChakraProvider>
-      <PokemonSelectionProvider>
-        <App />
-      </PokemonSelectionProvider>
+      <TournamentProvider>
+        <PokemonSelectionProvider>
+          <App />
+        </PokemonSelectionProvider>
+      </TournamentProvider>
     </ChakraProvider>
   </React.StrictMode>
 );

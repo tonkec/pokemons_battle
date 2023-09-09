@@ -6,6 +6,7 @@ import usePokemonSelection from '../../hooks/usePokemonSelection';
 import UserService from '../../services/UserService';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router';
+import useTournament from '../../hooks/useTournament';
 import {
   Alert,
   AlertIcon,
@@ -16,6 +17,7 @@ import {
 const Pokemons = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { tournamentStarted, tournamentEnded } = useTournament();
   const { onPokemonSelection, pokemonSelection } = usePokemonSelection();
   const [allPokemons, setAllPokemons] = useState<Pokemon[]>();
   const [error, setError] = useState<string>();
@@ -30,7 +32,12 @@ const Pokemons = () => {
   const addPokemon = async () => {
     if (pokemonSelection && user) {
       if (pokemonSelection.length > 0) {
-        UserService.addPokemonToUser(user, pokemonSelection);
+        UserService.addPokemonToUser(user, pokemonSelection)
+          .then(() => {})
+          .catch((error) => {
+            setError(error.message);
+          });
+
         navigate('/');
       }
     }
@@ -39,6 +46,9 @@ const Pokemons = () => {
   useEffect(() => {
     getPokemons(limit, offset);
   }, [limit, offset]);
+
+  console.log(tournamentEnded, 'ended');
+  console.log(tournamentStarted, 'started');
 
   return (
     <>
@@ -50,22 +60,29 @@ const Pokemons = () => {
         </Alert>
       )}
       <h1>Select your pokemons</h1>
+      {tournamentStarted && !tournamentEnded && (
+        <p>You can not change pokemons during tournament</p>
+      )}
       {allPokemons && allPokemons.length > 0 && (
         <div
           className="pokemon-list"
           style={{ display: 'flex', flexWrap: 'wrap' }}
         >
+          {' '}
           {allPokemons.map((pokemon: Pokemon) => (
             <>
               <PokemonCard pokemon={pokemon} />
-              <input
-                type="checkbox"
-                name=""
-                id=""
-                onChange={() => {
-                  onPokemonSelection(pokemon);
-                }}
-              />
+
+              {!tournamentStarted && tournamentEnded && (
+                <input
+                  type="checkbox"
+                  name=""
+                  id=""
+                  onChange={() => {
+                    onPokemonSelection(pokemon);
+                  }}
+                />
+              )}
             </>
           ))}
         </div>

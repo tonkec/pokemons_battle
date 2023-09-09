@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import UserService from '../../services/UserService';
 import TrainerCard from '../../components/TrainerCard';
 import { useNavigate } from 'react-router';
+import useTournament from '../../hooks/useTournament';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const [users, setUsers] = useState<any>([]);
   const navigate = useNavigate();
+  const { startTournament } = useTournament();
 
   const fetchUsers = async () => {
     UserService.getAllUsers()
@@ -53,6 +56,17 @@ const Dashboard = () => {
           ))}
         </div>
       )}
+
+      <button
+        onClick={() => {
+          startTournament();
+          navigate('/battle');
+        }}
+      >
+        Start Tournament
+      </button>
+
+      <Link to="/add-pokemon">Add Pokemon</Link>
     </>
   );
 };

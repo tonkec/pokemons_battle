@@ -17,7 +17,6 @@ const UserService = {
       const querySnapshot = await getDocs(ref);
       querySnapshot.forEach((doc) => {
         if (doc.data().userId === userId) {
-          console.log('HERE');
           const userRef = doc.ref;
           if (doc.data().pokemons) {
             updateDoc(userRef, {
@@ -84,7 +83,6 @@ const UserService = {
         return doc.data();
       });
 
-      console.log(data);
       return data;
     } catch (error) {
       console.log(error);

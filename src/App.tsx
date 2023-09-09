@@ -7,6 +7,7 @@ import AddPokemon from './pages/AddPokemon';
 import UserPokemons from './pages/UserPokemons';
 import Dashboard from './pages/Dashboard';
 import TrainerPage from './pages/TrainerPage';
+import BattlePage from './pages/BattlePage';
 
 function App() {
   return (
@@ -45,6 +46,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <TrainerPage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/battle"
+            element={
+              <ProtectedRoute>
+                <BattlePage />
               </ProtectedRoute>
             }
           />
