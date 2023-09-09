@@ -4,10 +4,12 @@ import UserService from '../../services/UserService';
 import { Pokemon } from '../../services/types';
 import { DocumentData } from '@firebase/firestore-types';
 import PokemonCard from '../../components/PokemonCard';
+import Toast, { toastType } from '../../components/Toast';
 
 const UserPokemons = () => {
   const [userPokemons, setUserPokemons] = useState<DocumentData | never[][]>();
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const [errorType, setErrorType] = useState<toastType>(undefined);
 
   const { user } = useAuth();
 
@@ -30,14 +32,18 @@ const UserPokemons = () => {
             try {
               await UserService.removePokemonFromUser(pokemon.url, user);
               fetchAllPokemons();
+              setErrorMessage('Pokemon removed successfully');
+              setErrorType('success');
             } catch (error: any) {
               setErrorMessage(error.message);
+              setErrorType('error');
             }
           }}
           pokemon={pokemon}
-          errorMessage={errorMessage}
         />
       ))}
+
+      {errorMessage && <Toast message={errorMessage} type={errorType} />}
     </div>
   ) : (
     <p>No pokemons</p>

@@ -3,19 +3,22 @@ import PokemonService from '../../services/PokemonService';
 import { Pokemon } from '../../services/types';
 import { getIdFromUrl } from '../../helpers';
 import { useAuth } from '../../hooks/useAuth';
-import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
+import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react';
 
 const PokemonCard = ({
   pokemon,
+  pokemonSelection,
   onDelete,
-  errorMessage,
+  onClick,
 }: {
   pokemon: Pokemon;
+  pokemonSelection?: Pokemon[];
   onDelete?: () => void;
-  errorMessage?: string;
+  onClick?: () => void;
 }) => {
   const { user } = useAuth();
   const [pokemonImage, setPokemonImage] = useState<string>('');
+  const [isSelected, setIsSelected] = useState<boolean>(false);
 
   useEffect(() => {
     const getPokemonData = async () => {
@@ -28,26 +31,46 @@ const PokemonCard = ({
     getPokemonData();
   }, [pokemon.url]);
 
+  useEffect(() => {
+    // check whether the pokemon is selected
+    if (pokemonSelection) {
+      const isSelected = pokemonSelection.find(
+        (pokemonSelected) => pokemonSelected.name === pokemon.name
+      );
+
+      if (isSelected) {
+        setIsSelected(true);
+      } else {
+        setIsSelected(false);
+      }
+    }
+  }, [pokemonSelection, pokemon.name]);
+
   return (
-    <>
-      {errorMessage && (
-        <Alert status="error">
-          <AlertIcon />
-          <AlertDescription>{errorMessage}</AlertDescription>
-        </Alert>
-      )}
-      <div className="pokemon-card">
-        <div className="pokemon-card__img">
-          <img src={pokemonImage} alt={pokemon.name} />
-        </div>
-        <div className="pokemon-card__name">{pokemon.name}</div>
-        {onDelete && user && (
-          <div className="pokemon-card__remove">
-            <button onClick={onDelete}>Remove</button>
-          </div>
+    <Card
+      maxW="sm"
+      borderWidth="1px"
+      borderRadius="lg"
+      overflow="hidden"
+      boxShadow="lg"
+      cursor="pointer"
+      marginLeft={2}
+      marginTop={2}
+      onClick={onClick}
+      backgroundColor={isSelected ? 'blue.200' : 'white'}
+    >
+      <CardHeader>{pokemon.name}</CardHeader>
+      <CardBody>
+        <img src={pokemonImage} alt={pokemon.name} />
+      </CardBody>
+      <CardFooter>
+        {user && onDelete && (
+          <button onClick={onDelete} className="btn btn-danger">
+            Delete
+          </button>
         )}
-      </div>
-    </>
+      </CardFooter>
+    </Card>
   );
 };
 
