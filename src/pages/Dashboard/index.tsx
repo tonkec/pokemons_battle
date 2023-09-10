@@ -77,7 +77,7 @@ const Dashboard = () => {
           }}
           colorScheme="blue"
         >
-          Start Tournament
+          Go to battle
         </Button>
 
         <Button
