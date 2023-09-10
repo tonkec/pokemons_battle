@@ -6,6 +6,10 @@ In this game you can add up to 6 pokemons to your deck. Winners are chosen rando
 
 In the project directory, you can run:
 
+### `npm install`
+
+Install all the dependencies
+
 ### `npm start`
 
 Runs the app in the development mode.\
