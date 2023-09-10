@@ -1,18 +1,21 @@
 import { Pokemon } from '../../services/types';
-import { Card, CardHeader, CardBody, CardFooter } from '@chakra-ui/react';
+import { Card, CardHeader, CardBody } from '@chakra-ui/react';
+import { DocumentData } from 'firebase/firestore';
 
-type Trainer = {
-  name: string;
-  rank: number;
-  pokemons: Pokemon[];
-};
+export type Trainer =
+  | {
+      name: string;
+      rank: number;
+      pokemons: Pokemon[];
+    }
+  | DocumentData;
 
 const TrainerCard = ({
   trainer,
   onClick,
 }: {
   trainer: Trainer;
-  onClick: () => void;
+  onClick?: () => void;
 }) => {
   return (
     trainer && (

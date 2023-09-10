@@ -169,6 +169,25 @@ const UserService = {
       console.log(error);
     }
   },
+
+  async updateUserRank(userId: string, rank: number) {
+    try {
+      const ref = collection(firestore, 'users');
+      const querySnapshot = await getDocs(ref);
+      querySnapshot.forEach((doc) => {
+        if (doc.data().userId === userId) {
+          const userRef = doc.ref;
+          updateDoc(userRef, {
+            rank,
+          });
+        }
+      });
+
+      return querySnapshot;
+    } catch (error: any) {
+      throw new Error(error);
+    }
+  },
 };
 
 export default UserService;

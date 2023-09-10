@@ -1,4 +1,5 @@
 import { Alert, AlertIcon, AlertDescription } from '@chakra-ui/react';
+import { ToastStyled } from './Toast';
 
 export type toastType =
   | 'info'
@@ -10,10 +11,12 @@ export type toastType =
 
 const Toast = ({ message, type }: { message: string; type: toastType }) => {
   return (
-    <Alert status={type}>
-      <AlertIcon />
-      <AlertDescription>{message}</AlertDescription>
-    </Alert>
+    <ToastStyled>
+      <Alert status={type}>
+        <AlertIcon />
+        <AlertDescription>{message}</AlertDescription>
+      </Alert>
+    </ToastStyled>
   );
 };
 
