@@ -32,7 +32,6 @@ const PokemonCard = ({
   }, [pokemon.url]);
 
   useEffect(() => {
-    // check whether the pokemon is selected
     if (pokemonSelection) {
       const isSelected = pokemonSelection.find(
         (pokemonSelected) => pokemonSelected.name === pokemon.name

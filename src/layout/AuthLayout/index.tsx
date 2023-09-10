@@ -1,7 +1,7 @@
 import React from 'react';
 import { AuthLayoutStyled } from './AuthLayoutStyled';
 import { Global, css } from '@emotion/react';
-import { ContainerStyled } from '../Containers';
+import { AuthContainerStyled } from '../Containers';
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -17,7 +17,7 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
       />
 
       <AuthLayoutStyled>
-        <ContainerStyled>{children}</ContainerStyled>
+        <AuthContainerStyled>{children}</AuthContainerStyled>
       </AuthLayoutStyled>
     </>
   );

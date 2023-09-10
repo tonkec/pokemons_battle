@@ -25,7 +25,16 @@ const UserPokemons = () => {
   }, [fetchAllPokemons]);
 
   return user && userPokemons && userPokemons.length > 0 ? (
-    <div>
+    <div
+      className="pokemon-list"
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        paddingLeft: 30,
+        paddingRight: 30,
+      }}
+    >
       {userPokemons.map((pokemon: Pokemon) => (
         <PokemonCard
           onDelete={async () => {
@@ -40,6 +49,7 @@ const UserPokemons = () => {
             }
           }}
           pokemon={pokemon}
+          key={pokemon.url}
         />
       ))}
 

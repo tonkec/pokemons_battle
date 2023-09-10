@@ -1,7 +1,19 @@
 import { useEffect, useState } from 'react';
 import UserService from '../../services/UserService';
 import { useParams } from 'react-router';
+import PokemonCard from '../../components/PokemonCard';
 import { Pokemon } from '../../services/types';
+import {
+  Heading,
+  Card,
+  CardHeader,
+  CardBody,
+  List,
+  ListItem,
+  ListIcon,
+} from '@chakra-ui/react';
+import { SunIcon } from '@chakra-ui/icons';
+import AuthorizedLayout from '../../layout/AuthorizedLayout';
 
 const TrainerPage = () => {
   const [user, setUser] = useState<any>(null);
@@ -17,21 +29,41 @@ const TrainerPage = () => {
         });
   }, [id]);
   return (
-    <div>
-      <h1>TrainerPage</h1>
+    <AuthorizedLayout>
+      <Heading as="h1" size="xl" textAlign="center" marginBottom={50}>
+        Trainer Page
+      </Heading>
+
       {user && (
-        <div>
-          <p>Name: {user.name}</p>
-          <p>Rank: {user.rank}</p>
-          <p>
-            Pokemons:
-            {user.pokemons.map((pokemon: Pokemon) => {
-              return <span>{pokemon.name},</span>;
-            })}
-          </p>
-        </div>
+        <Heading as="h2" size="md" textAlign="center" marginBottom={50}>
+          {user.name} has {user.pokemons?.length} pokemons
+        </Heading>
       )}
-    </div>
+
+      <div
+        className="pokemon-list"
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          paddingLeft: 30,
+          paddingRight: 30,
+        }}
+      >
+        {user &&
+          user.pokemons &&
+          user.pokemons.length > 0 &&
+          user.pokemons.map((pokemon: Pokemon) => (
+            <PokemonCard pokemon={pokemon} key={pokemon.url} />
+          ))}
+      </div>
+
+      {user && (
+        <Heading as="h2" size="md" textAlign="center" marginTop={50}>
+          Rank {user.rank}
+        </Heading>
+      )}
+    </AuthorizedLayout>
   );
 };
 

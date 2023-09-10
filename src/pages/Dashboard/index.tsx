@@ -3,7 +3,9 @@ import UserService from '../../services/UserService';
 import TrainerCard from '../../components/TrainerCard';
 import { useNavigate } from 'react-router';
 import useTournament from '../../hooks/useTournament';
-import { Link } from 'react-router-dom';
+import { Heading } from '@chakra-ui/layout';
+import { Input, Button } from '@chakra-ui/react';
+import AuthorizedLayout from '../../layout/AuthorizedLayout';
 
 const Dashboard = () => {
   const [users, setUsers] = useState<any>([]);
@@ -24,9 +26,12 @@ const Dashboard = () => {
     fetchUsers();
   }, []);
   return (
-    <>
-      <h1>List of all trainers</h1>
-      <input
+    <AuthorizedLayout>
+      <Heading as="h1" size="xl" textAlign="center" marginBottom={50}>
+        List of all trainers
+      </Heading>
+      <Input
+        marginBottom={10}
         type="search"
         placeholder="Search for a trainer"
         onChange={(e) => {
@@ -57,17 +62,28 @@ const Dashboard = () => {
         </div>
       )}
 
-      <button
-        onClick={() => {
-          startTournament();
-          navigate('/battle');
-        }}
-      >
-        Start Tournament
-      </button>
+      <div style={{ marginTop: 50 }}>
+        <Button
+          onClick={() => {
+            startTournament();
+            navigate('/battle');
+          }}
+          colorScheme="blue"
+        >
+          Start Tournament
+        </Button>
 
-      <Link to="/add-pokemon">Add Pokemon</Link>
-    </>
+        <Button
+          colorScheme="pink"
+          onClick={() => {
+            navigate('/add-pokemon');
+          }}
+          style={{ marginLeft: 10 }}
+        >
+          Add Pokemon
+        </Button>
+      </div>
+    </AuthorizedLayout>
   );
 };
 

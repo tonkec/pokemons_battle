@@ -10,6 +10,7 @@ import useTournament from '../../hooks/useTournament';
 import { toastType } from '../../components/Toast';
 import { Heading, Button } from '@chakra-ui/react';
 import Toast from '../../components/Toast';
+import AuthorizedLayout from '../../layout/AuthorizedLayout';
 
 const Pokemons = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const Pokemons = () => {
             setToastType('error');
           });
 
-        // navigate('/');
+        navigate('/');
       }
     }
   };
@@ -51,20 +52,21 @@ const Pokemons = () => {
   }, [limit, offset]);
 
   return (
-    <div style={{ paddingBottom: 40 }}>
+    <AuthorizedLayout>
       {toastMessage && <Toast type={toastType} message={toastMessage} />}
-      <Heading
-        as="h1"
-        size="xl"
-        textAlign="center"
-        marginBottom={50}
-        marginTop={50}
-      >
+      <Heading as="h1" size="xl" textAlign="center" marginBottom={50}>
         Select your pokemons
       </Heading>
+
       {tournamentStarted && !tournamentEnded && (
-        <p>You can not change pokemons during tournament</p>
+        <div style={{ marginBottom: 50 }}>
+          <Toast
+            type="error"
+            message="You can not change pokemons during tournament"
+          />
+        </div>
       )}
+
       {allPokemons && allPokemons.length > 0 && (
         <div
           className="pokemon-list"
@@ -123,7 +125,7 @@ const Pokemons = () => {
           Add pokemons
         </Button>
       </div>
-    </div>
+    </AuthorizedLayout>
   );
 };
 
