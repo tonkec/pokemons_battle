@@ -8,6 +8,8 @@ import { Button, Heading } from '@chakra-ui/react';
 import TrainerCard from '../../components/TrainerCard';
 import Toast, { toastType } from '../../components/Toast';
 import { useNavigate } from 'react-router';
+import { Pokemon } from '../../services/types';
+import PokemonCard from '../../components/PokemonCard';
 
 const BattlePage = () => {
   const navigate = useNavigate();
@@ -18,6 +20,8 @@ const BattlePage = () => {
     useState<DocumentData | null>(null);
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState<toastType>();
+  const [userPokemon, setUserPokemon] = useState<Pokemon>();
+  const [enemyPokemon, setEnemyPokemon] = useState<Pokemon>();
   const { endTournament, tournamentEnded } = useTournament();
   const { user } = useAuth();
 
@@ -26,6 +30,7 @@ const BattlePage = () => {
       const user = res;
       if (user.pokemons?.length > 3) {
         setcurrentUserFromDb(user);
+        setUserPokemon(user.pokemons[Math.floor(Math.random() * 3)]);
       } else {
         setToastMessage('You need at least 3 pokemons to start a battle!');
         setToastType('error');
@@ -39,12 +44,12 @@ const BattlePage = () => {
 
       const winner = Math.random() > 0.5 ? currentUserFromDb : enemy;
       setWinner(winner);
+      if (winner) {
+        UserService.updateUserRank(winner.userId, winner.rank + 1);
+      }
       endTournament();
-      setTimeout(() => {
-        navigate('/');
-      }, 3000);
     },
-    [setWinner, currentUserFromDb, endTournament, navigate]
+    [setWinner, currentUserFromDb, endTournament]
   );
 
   const findEnemy = useCallback(() => {
@@ -59,6 +64,9 @@ const BattlePage = () => {
 
       if (enemy) {
         setEnemy(enemy);
+        const enemyPokemon =
+          enemy.pokemons[Math.floor(Math.random() * enemy.pokemons.length)];
+        setEnemyPokemon(enemyPokemon);
       }
     });
   }, [user]);
@@ -81,7 +89,7 @@ const BattlePage = () => {
         It is time to battle!
       </Heading>
 
-      {!enemy && (
+      {!enemyPokemon && (
         <Heading as="h2" size="sm" marginTop={2}>
           No enemies yet. Please come back later.
         </Heading>
@@ -94,16 +102,24 @@ const BattlePage = () => {
           alignItems: 'center',
         }}
       >
-        {enemy && (
+        {enemyPokemon && (
           <>
-            <TrainerCard trainer={enemy} />
+            <div>
+              {enemy?.name}
+              <PokemonCard pokemon={enemyPokemon} />
+            </div>
             <Heading as="h2" size="sm" marginLeft={10} marginRight={10}>
               VS.
             </Heading>
           </>
         )}
 
-        {currentUserFromDb && <TrainerCard trainer={currentUserFromDb} />}
+        {userPokemon && (
+          <div>
+            You:
+            <PokemonCard pokemon={userPokemon} />
+          </div>
+        )}
       </div>
 
       <div style={{ marginTop: 40, display: 'flex', justifyContent: 'center' }}>

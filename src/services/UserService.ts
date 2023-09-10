@@ -14,12 +14,12 @@ const UserService = {
       doc: DocumentData,
       userRef: DocumentReference
     ) => {
-      if (doc.data().pokemons.length < 6) {
+      if (doc.data().pokemons.length + pokemons.length < 6) {
         updateDoc(userRef, {
           pokemons: [...doc.data().pokemons, ...pokemons],
         });
       } else {
-        throw new Error('You already have 6 pokemons');
+        throw new Error('Choose up to 6 pokemons all together');
       }
     };
 

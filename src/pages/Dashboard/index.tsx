@@ -46,9 +46,17 @@ const Dashboard = () => {
           }
           setUsers(filteredTrainers);
         }}
+        size={'lg'}
+        borderColor={'blackAlpha'}
       />
       {users && users.length > 0 && (
-        <div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-start',
+            flexWrap: 'wrap',
+          }}
+        >
           {users.map((user: any) => (
             <div key={user.userId}>
               <TrainerCard
