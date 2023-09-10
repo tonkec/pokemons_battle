@@ -5,6 +5,8 @@ import { Pokemon } from '../../services/types';
 import { DocumentData } from '@firebase/firestore-types';
 import PokemonCard from '../../components/PokemonCard';
 import Toast, { toastType } from '../../components/Toast';
+import { Heading } from '@chakra-ui/react';
+import AuthorizedLayout from '../../layout/AuthorizedLayout';
 
 const UserPokemons = () => {
   const [userPokemons, setUserPokemons] = useState<DocumentData | never[][]>();
@@ -25,38 +27,45 @@ const UserPokemons = () => {
   }, [fetchAllPokemons]);
 
   return user && userPokemons && userPokemons.length > 0 ? (
-    <div
-      className="pokemon-list"
-      style={{
-        display: 'flex',
-        flexWrap: 'wrap',
-        justifyContent: 'center',
-        paddingLeft: 30,
-        paddingRight: 30,
-      }}
-    >
-      {userPokemons.map((pokemon: Pokemon) => (
-        <PokemonCard
-          onDelete={async () => {
-            try {
-              await UserService.removePokemonFromUser(pokemon.url, user);
-              fetchAllPokemons();
-              setErrorMessage('Pokemon removed successfully');
-              setErrorType('success');
-            } catch (error: any) {
-              setErrorMessage(error.message);
-              setErrorType('error');
-            }
-          }}
-          pokemon={pokemon}
-          key={pokemon.url}
-        />
-      ))}
+    <AuthorizedLayout>
+      <Heading as="h1" size="lg" marginBottom={'2rem'} textAlign="center">
+        Your Pokemons
+      </Heading>
+      <div
+        className="pokemon-list"
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          paddingLeft: 30,
+          paddingRight: 30,
+        }}
+      >
+        {userPokemons.map((pokemon: Pokemon) => (
+          <PokemonCard
+            onDelete={async () => {
+              try {
+                await UserService.removePokemonFromUser(pokemon.url, user);
+                fetchAllPokemons();
+                setErrorMessage('Pokemon removed successfully');
+                setErrorType('success');
+              } catch (error: any) {
+                setErrorMessage(error.message);
+                setErrorType('error');
+              }
+            }}
+            pokemon={pokemon}
+            key={pokemon.url}
+          />
+        ))}
 
-      {errorMessage && <Toast message={errorMessage} type={errorType} />}
-    </div>
+        {errorMessage && <Toast message={errorMessage} type={errorType} />}
+      </div>
+    </AuthorizedLayout>
   ) : (
-    <p>No pokemons</p>
+    <AuthorizedLayout>
+      <p>No pokemons</p>
+    </AuthorizedLayout>
   );
 };
 

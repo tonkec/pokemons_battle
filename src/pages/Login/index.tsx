@@ -35,7 +35,7 @@ const Login = () => {
       .then((userCredential) => {
         const user: any = userCredential.user;
         setTimeout(() => {
-          login(user.uid, '/add-pokemon');
+          login(user.uid, '/');
         }, 1000);
 
         setToastMessage('Logged in successfully');
