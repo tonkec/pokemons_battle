@@ -5,7 +5,6 @@ import PokemonCard from './../../components/PokemonCard';
 import usePokemonSelection from '../../hooks/usePokemonSelection';
 import UserService from '../../services/UserService';
 import { useAuth } from '../../hooks/useAuth';
-import { useNavigate } from 'react-router';
 import useTournament from '../../hooks/useTournament';
 import { toastType } from '../../components/Toast';
 import { Heading, Button } from '@chakra-ui/react';
@@ -13,7 +12,6 @@ import Toast from '../../components/Toast';
 import AuthorizedLayout from '../../layout/AuthorizedLayout';
 
 const Pokemons = () => {
-  const navigate = useNavigate();
   const { user } = useAuth();
   const { tournamentStarted, tournamentEnded } = useTournament();
   const { onPokemonSelection, pokemonSelection } = usePokemonSelection();
