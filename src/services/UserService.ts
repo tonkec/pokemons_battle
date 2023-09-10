@@ -60,11 +60,16 @@ const UserService = {
       querySnapshot.forEach((doc) => {
         if (doc.data().userId === userId) {
           const userRef = doc.ref;
-          const newPokemons = doc
-            .data()
-            .pokemons.filter((pokemon: any) => pokemon.url !== pokemonUrl);
+          const pokemons = doc.data().pokemons;
+
+          const index = pokemons.findIndex(
+            (pokemon: any) => pokemon.url === pokemonUrl
+          );
+
+          pokemons.splice(index, 1);
+
           updateDoc(userRef, {
-            pokemons: newPokemons,
+            pokemons,
           });
         }
       });

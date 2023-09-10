@@ -29,12 +29,10 @@ const Pokemons = () => {
   const addPokemon = async () => {
     if (pokemonSelection && user) {
       if (pokemonSelection.length > 0) {
-        console.log('pokemonSelection', pokemonSelection);
         UserService.addPokemonToUser(user, pokemonSelection)
           .then(() => {
             setToastMessage('Pokemons added successfully');
             setToastType('success');
-            // navigate('/');
           })
           .catch((error: any) => {
             setToastMessage(error.message);
