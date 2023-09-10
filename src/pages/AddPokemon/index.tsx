@@ -36,13 +36,12 @@ const Pokemons = () => {
           .then(() => {
             setToastMessage('Pokemons added successfully');
             setToastType('success');
+            // navigate('/');
           })
           .catch((error: any) => {
             setToastMessage(error.message);
             setToastType('error');
           });
-
-        navigate('/');
       }
     }
   };
@@ -53,10 +52,11 @@ const Pokemons = () => {
 
   return (
     <AuthorizedLayout>
-      {toastMessage && <Toast type={toastType} message={toastMessage} />}
-      <Heading as="h1" size="xl" textAlign="center" marginBottom={50}>
+      <Heading as="h1" size="xl" textAlign="center" marginBottom={30}>
         Select your pokemons
       </Heading>
+
+      {toastMessage && <Toast type={toastType} message={toastMessage} />}
 
       {tournamentStarted && !tournamentEnded && (
         <div style={{ marginBottom: 50 }}>
@@ -76,6 +76,7 @@ const Pokemons = () => {
             justifyContent: 'center',
             paddingLeft: 30,
             paddingRight: 30,
+            marginTop: 20,
           }}
         >
           {allPokemons.map((pokemon: Pokemon) => (
@@ -87,6 +88,7 @@ const Pokemons = () => {
                   } else {
                     setToastMessage('You can select only 6 pokemons');
                     setToastType('error');
+                    onPokemonSelection(pokemon);
                   }
                 }
               }}

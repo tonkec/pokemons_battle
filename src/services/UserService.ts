@@ -1,32 +1,49 @@
 import {
   updateDoc,
-  deleteDoc,
   collection,
   addDoc,
   getDocs,
-  getDoc,
-  doc,
-  writeBatch,
+  DocumentReference,
 } from 'firebase/firestore';
 import { firestore } from '../firebase';
+import { DocumentData } from '@firebase/firestore-types';
 
 const UserService = {
   async addPokemonToUser(userId: string, pokemons: any) {
+    const updateExistingPokemons = (
+      doc: DocumentData,
+      userRef: DocumentReference
+    ) => {
+      if (doc.data().pokemons.length < 6) {
+        updateDoc(userRef, {
+          pokemons: [...doc.data().pokemons, ...pokemons],
+        });
+      } else {
+        throw new Error('You already have 6 pokemons');
+      }
+    };
+
+    const createNewPokemons = (userRef: DocumentReference) => {
+      if (pokemons.length < 6) {
+        updateDoc(userRef, {
+          pokemons,
+        });
+      } else {
+        throw new Error('You already have 6 pokemons selected');
+      }
+    };
+
     try {
       const ref = collection(firestore, 'users');
       const querySnapshot = await getDocs(ref);
       querySnapshot.forEach((doc) => {
         if (doc.data().userId === userId) {
           const userRef = doc.ref;
-          if (doc.data().pokemons) {
-            updateDoc(userRef, {
-              pokemons: [...doc.data().pokemons, ...pokemons],
-            });
-          } else {
-            updateDoc(userRef, {
-              pokemons,
-            });
-          }
+          const alreadyHasPokemons = doc.data().pokemons;
+
+          return alreadyHasPokemons
+            ? updateExistingPokemons(doc, userRef)
+            : createNewPokemons(userRef);
         }
       });
 
