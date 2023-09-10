@@ -41,7 +41,7 @@ const UserPokemons = () => {
           paddingRight: 30,
         }}
       >
-        {userPokemons.map((pokemon: Pokemon) => (
+        {userPokemons.map((pokemon: Pokemon, index: number) => (
           <PokemonCard
             onDelete={async () => {
               try {
@@ -55,7 +55,7 @@ const UserPokemons = () => {
               }
             }}
             pokemon={pokemon}
-            key={pokemon.url}
+            key={index}
           />
         ))}
 

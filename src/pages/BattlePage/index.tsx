@@ -5,14 +5,11 @@ import UserService from '../../services/UserService';
 import { DocumentData } from '@firebase/firestore-types';
 import AuthorizedLayout from '../../layout/AuthorizedLayout';
 import { Button, Heading } from '@chakra-ui/react';
-import TrainerCard from '../../components/TrainerCard';
 import Toast, { toastType } from '../../components/Toast';
-import { useNavigate } from 'react-router';
 import { Pokemon } from '../../services/types';
 import PokemonCard from '../../components/PokemonCard';
 
 const BattlePage = () => {
-  const navigate = useNavigate();
   const [winner, setWinner] = useState<DocumentData | null>(null);
   const [enemy, setEnemy] = useState<DocumentData | null>(null);
   const [hasBattleStarted, setHasBattleStarted] = useState(false);
@@ -22,7 +19,7 @@ const BattlePage = () => {
   const [toastType, setToastType] = useState<toastType>();
   const [userPokemon, setUserPokemon] = useState<Pokemon>();
   const [enemyPokemon, setEnemyPokemon] = useState<Pokemon>();
-  const { endTournament, tournamentEnded } = useTournament();
+  const { endTournament, tournamentEnded, startTournament } = useTournament();
   const { user } = useAuth();
 
   const fetchCurrentUserFromDb = (userId: string) => {
@@ -41,15 +38,15 @@ const BattlePage = () => {
   const startBattle = useCallback(
     (enemy: DocumentData) => {
       setHasBattleStarted(true);
-
+      startTournament();
       const winner = Math.random() > 0.5 ? currentUserFromDb : enemy;
       setWinner(winner);
       if (winner) {
         UserService.updateUserRank(winner.userId, winner.rank + 1);
+        endTournament();
       }
-      endTournament();
     },
-    [setWinner, currentUserFromDb, endTournament]
+    [setWinner, currentUserFromDb, endTournament, startTournament]
   );
 
   const findEnemy = useCallback(() => {

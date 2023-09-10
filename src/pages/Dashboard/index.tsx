@@ -73,7 +73,6 @@ const Dashboard = () => {
       <div style={{ marginTop: 50 }}>
         <Button
           onClick={() => {
-            startTournament();
             navigate('/battle');
           }}
           colorScheme="blue"
